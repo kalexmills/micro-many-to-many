@@ -10,6 +10,39 @@
         <version>0.1</version>
     </parent>
 
+    <dependencies>
+        <dependency>
+            <groupId>micro.tower</groupId>
+            <artifactId>commons</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micronaut.configuration</groupId>
+            <artifactId>micronaut-jdbc-hikari</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-core</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-sqlobject</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-postgres</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>
+        </dependency>
+    </dependencies>
+
     <artifactId>conference-service</artifactId>
     <properties>
         <exec.mainClass>micro.tower.author.ConferenceService</exec.mainClass>

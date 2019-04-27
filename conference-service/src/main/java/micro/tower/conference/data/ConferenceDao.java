@@ -1,5 +1,6 @@
 package micro.tower.conference.data;
 
+import micro.tower.model.Conference;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -10,23 +11,16 @@ import java.util.UUID;
 
 public interface ConferenceDao {
 
-  @SqlQuery("SELECT * FROM conferences WHERE id = :id")
+  @SqlQuery("SELECT * FROM conference_svc.conferences WHERE id = :id")
   @RegisterBeanMapper(Conference.class)
   Conference findById(UUID id);
 
-  @SqlQuery("SELECT * FROM conferences co " +
+  @SqlQuery("SELECT * FROM conference_svc.conferences co " +
       "INNER JOIN attendance att ON att.conference_id = co.id " +
       "WHERE att.author_id = :authorId")
   @RegisterBeanMapper(Conference.class)
-  List<Conference> findByAttendingAuthorId(UUID authorId);
+  List<Conference> findAllByAuthorId(UUID authorId);
 
-  @SqlUpdate("INSERT INTO conferences (id, acronym) VALUES (:id, :acronym)")
+  @SqlUpdate("INSERT INTO conference_svc.conferences (id, acronym) VALUES (:id, :acronym)")
   boolean insert(@BindBean Conference conference);
-
-  @SqlQuery("SELECT author_id FROM attendance where conference_id = :conferenceId")
-  List<UUID> findAttendingAuthorsFor(UUID conferenceId);
-
-  @SqlUpdate("INSERT INTO attendance (conference_id, author_id) VALUES (:conferenceId, :authorId)")
-  boolean insertAttendance(UUID authorId, UUID conferenceId);
-
 }

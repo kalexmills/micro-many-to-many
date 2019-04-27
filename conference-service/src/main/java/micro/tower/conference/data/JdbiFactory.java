@@ -2,6 +2,7 @@ package micro.tower.conference.data;
 
 import io.micronaut.context.annotation.Factory;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,6 +15,6 @@ public class JdbiFactory {
 
   @Singleton
   public Jdbi jdbi() {
-    return Jdbi.create(dataSource);
+    return Jdbi.create(dataSource).installPlugin(new SqlObjectPlugin());
   }
 }

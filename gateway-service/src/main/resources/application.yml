@@ -1,0 +1,11 @@
+microtower:
+  author:
+    host: https://localhost:8070/author
+  event:
+    host: https://localhost:8080/event
+
+micronaut:
+  ssl:
+    port: 8443
+    enabled: true
+    buildSelfSigned: true

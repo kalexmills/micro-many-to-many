@@ -1,6 +1,8 @@
 micronaut:
-  server:
+  ssl:
     port: 8090
+    enabled: true
+    buildSelfSigned: true
 
 datasources:
   default:
