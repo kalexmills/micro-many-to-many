@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: micro.tower.
+---
+testFramework: junit
+sourceLanguage: java
