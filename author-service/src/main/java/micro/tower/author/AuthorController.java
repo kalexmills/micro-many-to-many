@@ -5,6 +5,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.validation.Validated;
+import io.reactivex.Single;
 import micro.tower.model.Author;
 import micro.tower.author.data.AuthorDao;
 import micro.tower.services.AuthorOperations;
@@ -43,18 +44,10 @@ public class AuthorController implements AuthorOperations {
   }
 
   @Override
-  public HttpResponse createAttendance(@QueryValue UUID eventId, @QueryValue UUID authorId) {
-    try {
-      URI location = UriBuilder.of(PREFIX)
-          .path(authorId.toString())
-          .path("attendance")
-          .path(eventId.toString())
-          .build();
-      jdbiInsertAttendance(authorId, eventId);
-      return HttpResponse.created(location);
-    } catch (JdbiException e) {
-      return HttpResponse.status(HttpStatus.NOT_FOUND);
-    }
+  public Single<HttpResponse> createAttendance(@QueryValue UUID eventId, @QueryValue UUID authorId) {
+    return Single.defer(() -> Single.just(jdbiInsertAttendance(authorId, eventId)))
+        .map(result -> (HttpResponse)HttpResponse.created(attendanceUri(eventId, authorId)))
+        .onErrorReturn((e) -> HttpResponse.notFound());
   }
 
   @Override
@@ -75,5 +68,13 @@ public class AuthorController implements AuthorOperations {
 
   private boolean jdbiInsertAuthor(Author author) {
     return jdbi.withHandle(handle -> handle.attach(AuthorDao.class).insert(author));
+  }
+
+  private URI attendanceUri(UUID eventId, UUID authorId) {
+    return UriBuilder.of(PREFIX)
+        .path(authorId.toString())
+        .path("attendance")
+        .path(eventId.toString())
+        .build();
   }
 }

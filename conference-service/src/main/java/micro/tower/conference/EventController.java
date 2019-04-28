@@ -5,6 +5,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.validation.Validated;
+import io.reactivex.Single;
 import micro.tower.model.Event;
 import micro.tower.conference.data.EventDao;
 import micro.tower.services.EventOperations;
@@ -44,19 +45,14 @@ public class EventController implements EventOperations {
   }
 
   @Override
-  public HttpResponse createAttendance(@NotNull UUID eventId, @NotNull UUID authorId) {
-    try {
-      URI location = UriBuilder.of(PREFIX)
-          .path(authorId.toString())
-          .path("attendance")
-          .path(eventId.toString())
-          .build();
+  public Single<HttpResponse> createAttendance(@NotNull UUID eventId, @NotNull UUID authorId) {
+    return Single.defer(() -> Single.just(jdbiInsertAttendance(eventId, authorId)))
+        .map(result -> (HttpResponse)HttpResponse.created(attendanceUri(eventId, authorId)))
+        .onErrorReturn((e) -> HttpResponse.notFound());
+  }
 
-      jdbi.withHandle(handle -> handle.attach(EventDao.class).insertAttendance(eventId, authorId));
-      return HttpResponse.created(location);
-    } catch (JdbiException e) {
-      return HttpResponse.notFound();
-    }
+  public boolean jdbiInsertAttendance(UUID eventId, UUID authorId) {
+    return jdbi.withHandle(handle -> handle.attach(EventDao.class).insertAttendance(eventId, authorId));
   }
 
   @Override
@@ -64,5 +60,12 @@ public class EventController implements EventOperations {
     return null;
   }
 
+  private URI attendanceUri(UUID eventId, UUID authorId) {
+    return UriBuilder.of(PREFIX)
+        .path(eventId.toString())
+        .path("attendance")
+        .path(authorId.toString())
+        .build();
+  }
 
 }

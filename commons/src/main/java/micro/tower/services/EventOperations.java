@@ -4,6 +4,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.validation.Validated;
+import io.reactivex.Single;
 import micro.tower.model.Event;
 
 import javax.validation.Valid;
@@ -20,7 +21,7 @@ public interface EventOperations {
 
 
   @Post(value="/{eventId}/attendance/{authorId}")
-  HttpResponse createAttendance(@NotNull @QueryValue UUID eventId, @NotNull @QueryValue UUID authorId);
+  Single<HttpResponse> createAttendance(@NotNull @QueryValue UUID eventId, @NotNull @QueryValue UUID authorId);
 
   @Delete(value="/{eventId}/attendance/{authorId}")
   HttpResponse deleteAttendance(@NotNull @QueryValue UUID eventId, @NotNull @QueryValue UUID authorId);
