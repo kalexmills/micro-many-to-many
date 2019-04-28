@@ -62,9 +62,10 @@ DATABASE: Conference DB
 ```
 
 This repository demonstrates a way to achieve **eventual consistency** of a many-to-many relationship using
-**non-blocking I/O**. At a high-level, both the Author and Conference services each expose internal endpoints for
-creating an Attendance record. A Gateway service exposes an external endpoint for creating an attendance record.
-Internally, it calls the endpoints at the Author and Conference service and handles any error conditions that may arise.
+**non-blocking I/O**, and a discipline for querying this data which makes it appear **strongly consistent**. At a 
+high-level, both the Author and Conference services each expose internal endpoints for creating an Attendance record. 
+A Gateway service exposes an external endpoint for creating an attendance record. Internally, it calls the endpoints
+at the Author and Conference service and handles any error conditions that may arise.
 
 These error conditions are expected to be common. A client request to insert the Attendance of an existing Author at a
 non-existent Conference would yield a successful `INSERT` in the `Author.Attendance` table, whereas the corresponding
