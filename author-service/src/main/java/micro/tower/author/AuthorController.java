@@ -8,12 +8,14 @@ import io.micronaut.validation.Validated;
 import io.reactivex.Single;
 import micro.tower.model.Author;
 import micro.tower.author.data.AuthorDao;
+import micro.tower.model.Authors;
 import micro.tower.services.AuthorOperations;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.JdbiException;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @Validated
@@ -32,6 +34,12 @@ public class AuthorController implements AuthorOperations {
   public Author retrieve(@QueryValue UUID id) {
     return jdbi.withHandle(handle -> handle.attach(AuthorDao.class)
           .findById(id));
+  }
+
+  @Override
+  public Single<Authors> retrieveByEvent(@QueryValue UUID eventId) {
+    return Single.just(jdbi.withHandle(handle -> handle.attach(AuthorDao.class).findAllByEventId(eventId)))
+      .map(Authors::new);
   }
 
   @Override

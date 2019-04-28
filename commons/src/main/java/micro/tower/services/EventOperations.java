@@ -14,11 +14,10 @@ import java.util.UUID;
 @Validated
 public interface EventOperations {
   @Get(value="/{id}", produces = MediaType.APPLICATION_JSON)
-  Event retrieve(@QueryValue UUID id);
+  Single<Event> retrieve(@QueryValue UUID id);
 
   @Post(value="/", consumes = MediaType.APPLICATION_JSON)
   HttpResponse create(@Body @Valid Event conference);
-
 
   @Post(value="/{eventId}/attendance/{authorId}")
   Single<HttpResponse> createAttendance(@NotNull @QueryValue UUID eventId, @NotNull @QueryValue UUID authorId);

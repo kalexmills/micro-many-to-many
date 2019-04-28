@@ -18,7 +18,7 @@ public interface AuthorDao {
   @SqlUpdate("INSERT INTO author_svc.authors (id, full_name) VALUES (:id, :fullName)")
   boolean insert(@BindBean Author author);
 
-  @SqlQuery("SELECT * from author_svc.authors au INNER JOIN attendance att ON att.author_id = au.id WHERE att.event_id = :eventId")
+  @SqlQuery("SELECT au.* from author_svc.authors au INNER JOIN author_svc.attendance att ON att.author_id = au.id WHERE att.event_id = :eventId")
   @RegisterBeanMapper(Author.class)
   List<Author> findAllByEventId(UUID eventId);
 

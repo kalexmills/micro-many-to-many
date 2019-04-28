@@ -30,9 +30,8 @@ public class EventController implements EventOperations {
   }
 
   @Override
-  public Event retrieve(@QueryValue UUID id) {
-    return jdbi.withHandle(handle -> handle.attach(EventDao.class)
-          .findById(id));
+  public Single<Event> retrieve(@QueryValue UUID id) {
+    return Single.just(jdbi.withHandle(handle -> handle.attach(EventDao.class).findById(id)));
   }
 
   @Override
