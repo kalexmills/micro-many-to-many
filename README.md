@@ -164,4 +164,17 @@ the same instance.
 
 Create the database schemas using the SQL from the [conference-service]() and the [author-service]().
 
-Execute a create
+Start all three services on localhost.
+
+Seed the database by executing create requests.
+
+```curl https://localhost:8070/author -d '{"full_name":"Alan Turing"}'```
+```curl https://localhost:8080/conference -d '{"acronym":"SWAT"}'```
+ Note the `Location` header from the above request, it will be needed to create an `Event` below.
+ ```curl https://localhost:8080/event -d '{"conference_id":"${CONFERENCE_ID}", "seq":1}'```
+ 
+ Now record Alan Turing's (fictional) attendance at the first SWAT conference using the POST request below.
+ 
+ ```curl https://localhost:8443/event/${EVENT_ID}/attendance/${AUTHOR_ID} -X POST```
+ 
+ Experiment by using non-existent values for EVENT_ID and AUTHOR_ID and check the logs of each service to note the response.
