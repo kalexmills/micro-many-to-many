@@ -136,7 +136,7 @@ richer queries, and weighed against the added complexity of peer-to-peer communi
 
 You may be concerned that the load across the system appears to be doubled in the scheme we have described. Two services
 are needed to handle a single request, and we would be justified in asking if we can do any better. Of course, we can,
-but the added efficiency comes at the additional complexity (see
+but the added efficiency comes at additional complexity (see
 [two-phase commit](https://en.wikipedia.org/wiki/Two-phase_commit_protocol)), or additional hops (see 
 [daisy-chaining](https://microservices.io/patterns/data/saga.html)).
 
