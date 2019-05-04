@@ -169,8 +169,11 @@ Start all three services on localhost.
 Seed the database by executing create requests.
 
 ```curl https://localhost:8070/author -d '{"full_name":"Alan Turing"}'```
+
 ```curl https://localhost:8080/conference -d '{"acronym":"SWAT"}'```
+
  Note the `Location` header from the above request, it will be needed to create an `Event` below.
+ 
  ```curl https://localhost:8080/event -d '{"conference_id":"${CONFERENCE_ID}", "seq":1}'```
  
  Now record Alan Turing's (fictional) attendance at the first SWAT conference using the POST request below.
