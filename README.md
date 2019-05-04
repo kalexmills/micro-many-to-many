@@ -6,6 +6,9 @@
   * Data access via [JDBI](https://jdbi.org)
   * Data storage via [Postgres](https://postgresql.org)
 
+**CAVEAT LECTOR**: This is just an example of one design choice, which is almost certaintly not appropriate for all systems.
+Consider your use-case and maintenance budget carefully before using this design.
+
 ## Discussion
 
 Recently, [microservice architectures](https://microservices.io/) have been getting a lot of hype. Their merits and
