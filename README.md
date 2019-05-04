@@ -63,24 +63,24 @@ DATABASE: Conference DB
 
 This repository demonstrates a way to achieve **eventual consistency** of a many-to-many relationship using
 **non-blocking I/O**, and a discipline for querying this data which makes it appear **strongly consistent**. At a 
-high-level, both the Author and Conference services each expose internal endpoints for creating an Attendance record. 
-A Gateway service exposes an external endpoint for creating an attendance record. Internally, it calls the endpoints
+high-level, both the Author and Conference services each expose *internal* endpoints for creating an Attendance record. 
+A Gateway service exposes an *external* endpoint for creating an attendance record. The gateway internally calls the endpoints
 at the Author and Conference service and handles any error conditions that may arise.
 
-These error conditions are expected to be common. A client request to insert the Attendance of an existing Author at a
+These error conditions are expected to be common. A request to insert the Attendance of an existing Author at a
 non-existent Conference would yield a successful `INSERT` in the `Author.Attendance` table, whereas the corresponding
-`INSERT` to the `Conference.Attendace` table would fail. The failures are translated to HTTP response codes, which the
-Gateway service detects, rolls back the successful request by performing a `DELETE` on the `Authors.Attendance` table,
-and returns a `404 Not Found` response back to the client.
+`INSERT` to the `Conference.Attendance` table would fail. The gateway sees these failures as HTTP response codes, and
+then rolls back the successful request by performing a `DELETE` on the `Authors.Attendance` table, returning a
+ `404 Not Found` response back to the client.
 
 If the above error-handling strategy makes you queasy, you're not alone. After the successful `INSERT` into
 `Author.Attendance`, it is possible that some query to the `Author` service may yield a result which refers to a
-non-existing `Conference`. However, if we design our Gateway to perform its queries carefully, we can avoid these
-dangling pointers before we return a message back to the client.
+non-existing `Conference`. However, **if we design our Gateway to perform its queries carefully, we can avoid these
+dangling pointers** before we return a message back to the client.
 
-We will design our gateway to make simultaneous requests to the Author and Conference microservice for each query
+Our gateway will make simultaneous requests to the Author and Conference microservice for each query
 which involves the Attendance table. In case a spurious entry is requested by a client, the corresponding microservice
-will detect it, and the Gateway can handle it. As a bonus, we are left with an API which always eagerly fetches details
+will detect it, and the Gateway will handle it. As a bonus, we have an API which always eagerly fetches details
 of the entities it returns, thus cutting down on the number of round-trips expected from the client.
 
 Let's consider the possible outcomes when each microservice contains spurious entries. There are two types of queries
@@ -118,12 +118,18 @@ symmetric.
 
 ### Summary
 
-The tedium above can be summarized simply by the phrase "Only Ask the Owner". In our design, no microservice should ask
+The tedium above can be summarized simply by the phrase **"Only Ask the Owner"**. In our design, no microservice should ask
 the Author service for a list of Conferences because the Author service does not own the Conference list. In any case,
-this query would just dump a list of IDs in the service's lap, which would either be returned to the client (who will 
-almost certainly send further requests to get Conference details), or used to fetch data from the Confernence service.
+this query would just dump a list of IDs in the service's lap, which would force the client to follow up by sending extra requests.
 Writing a microservice to make simultaneous request in this constrained way avoids these issues and ensures data
 integrity.
+
+While this technique works, maintaining a many-to-many relationship across a microservice boundary is not a decision to be
+taken lightly. This should only be done for relationships whose queries are expected to remain extremely simple. As richer
+queries begin to be added, the benefits gained by separating the Authors and Conferences tables begin to outweigh the 
+complications. To accommodate richer queries, additional data will need to be added to the join table. In the design used
+here, the task of maintaining this data falls to the Gateway service. This decision should be reconsidered in the context of
+richer queries, and weighed against the added complexity of peer-to-peer communication among the Author and Conference service.
 
 You may be concerned that the load across the system appears to be doubled in the scheme we have described. Two services
 are needed to handle a single request, and we would be justified in asking if we can do any better. Of course, we can,
@@ -155,3 +161,4 @@ the same instance.
 
 Create the database schemas using the SQL from the [conference-service]() and the [author-service]().
 
+Execute a create
