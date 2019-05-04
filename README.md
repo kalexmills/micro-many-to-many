@@ -4,7 +4,7 @@
   * HTTP via [Micronaut](https://micronaut.io)
   * Non-blocking I/O via [RxJava](https://github.com/ReactiveX/RxJava)
   * Data access via [JDBI](https://jdbi.org)
-  * Data storage via [Postgres](https://postgresql.org) made convenient via [Docker](https://docker.com)
+  * Data storage via [Postgres](https://postgresql.org)
 
 ## Discussion
 
