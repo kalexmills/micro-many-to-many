@@ -1,6 +1,6 @@
 # Maintaining Entity Relationships Across Microservices
 
-* Maintaining a many-to-many relationship among microservices:
+* Maintaining a many-to-many relationship using a *composing gateway service*.
   * HTTP via [Micronaut](https://micronaut.io)
   * Non-blocking I/O via [RxJava](https://github.com/ReactiveX/RxJava)
   * Data access via [JDBI](https://jdbi.org)
